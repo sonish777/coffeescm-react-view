@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { withStyles } from "@material-ui/core";
 import jsonPretty from "json-pretty-html";
 import ReactHtmlParser from "react-html-parser";
 
@@ -6,6 +8,7 @@ import MainHeader from "../../components/MainHeader/MainHeader";
 import ModalView from "../../components/Modal/ModalView";
 import TableView from "../../components/TableView/TableView";
 import WhiteCard from "../../components/WhiteCard/WhiteCard";
+import styles from "./UsersStyle";
 
 import "./json-pretty.css";
 
@@ -80,7 +83,7 @@ const userTableData = [
 class Users extends Component {
   state = {
     viewCertificate: false,
-    currentCertificate: "",
+    currentCertificate: {},
   };
 
   viewCertificateHandler = (id) => {
@@ -98,6 +101,7 @@ class Users extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
         <ModalView
@@ -105,7 +109,6 @@ class Users extends Component {
           onCloseHandler={this.closeCertificateHandler}
           modalHeader="X.502 Certificate"
         >
-          {/* {JSON.stringify(this.state.currentCertificate, null, 10)} */}
           {ReactHtmlParser(
             jsonPretty(
               this.state.currentCertificate,
@@ -113,7 +116,12 @@ class Users extends Component {
             )
           )}
         </ModalView>
-        <MainHeader>Users</MainHeader>
+        <div className={classes.header}>
+          <MainHeader>Users</MainHeader>
+          <Link to="/users/create" className={classes.link}>
+            Create User
+          </Link>
+        </div>
         <WhiteCard>
           <TableView
             tableHeaders={userTableHeaders}
@@ -134,4 +142,4 @@ class Users extends Component {
   }
 }
 
-export default Users;
+export default withStyles(styles)(Users);

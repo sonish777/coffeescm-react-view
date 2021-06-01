@@ -11,7 +11,7 @@ import {
 import styles from "./LayoutStyles";
 
 const navLinks = [
-  { text: "Dashboard", route: "/" },
+  { text: "Dashboard", route: "/dashboard" },
   { text: "Users", route: "/users" },
   { text: "Contracts", route: "/contracts" },
   { text: "Batches", route: "/batches" },
