@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Container } from "@material-ui/core";
+import { Button, Container, withStyles } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -7,6 +7,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableFooter from "@material-ui/core/TableFooter";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
+import styles from "./TableViewStyle";
+import { withRouter } from "react-router";
 
 class TableView extends Component {
   state = {
@@ -29,14 +31,25 @@ class TableView extends Component {
 
   render() {
     const { page, rowsPerPage } = this.state;
-    const { tableHeaders, tableData, actions, actionHandlers } = this.props;
+    const {
+      tableHeaders,
+      tableData,
+      actions,
+      actionHandlers,
+      links,
+      fullData,
+      classes,
+      history,
+      location,
+    } = this.props;
+    console.log(this.props);
 
     const emptyRows =
       rowsPerPage -
       Math.min(rowsPerPage, tableData.length - page * rowsPerPage);
     return (
       <TableContainer component={Container}>
-        <Table>
+        <Table size="small">
           <TableBody>
             <TableRow>
               {tableHeaders.map((header, i) => (
@@ -52,14 +65,27 @@ class TableView extends Component {
                 )
               : tableData
             ).map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
+              <TableRow key={rowIndex} hover={links}>
                 {Object.keys(row).map(
                   (key, i) =>
-                    row[key] && (
+                    row[key] &&
+                    (!links ? (
                       <TableCell key={i} component="th" scope="row">
                         {row[key]}
                       </TableCell>
-                    )
+                    ) : (
+                      <TableCell
+                        key={i}
+                        component="th"
+                        scope="row"
+                        onClick={() =>
+                          history.push(`${location.pathname}/${row.contractId}`)
+                        }
+                        className={classes.link}
+                      >
+                        {row[key]}
+                      </TableCell>
+                    ))
                 )}
                 {actions && (
                   <TableCell>
@@ -101,4 +127,4 @@ class TableView extends Component {
   }
 }
 
-export default TableView;
+export default withRouter(withStyles(styles)(TableView));

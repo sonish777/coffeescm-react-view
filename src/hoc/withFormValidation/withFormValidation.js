@@ -26,6 +26,7 @@ const withFormValidation = (WrappedComponent) => (props) => {
   const updateErrorData = (formData, name) => {
     let error = true;
     formData[name] = validate(formData[name]);
+    formData[name].touched = true;
     Object.values(formData).forEach((formEl) => {
       formEl.touched !== undefined
         ? (error = error && !formEl.error && formEl.touched)

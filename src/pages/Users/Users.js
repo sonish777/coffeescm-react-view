@@ -5,7 +5,7 @@ import jsonPretty from "json-pretty-html";
 import ReactHtmlParser from "react-html-parser";
 
 import MainHeader from "../../components/MainHeader/MainHeader";
-import ModalView from "../../components/Modal/ModalView";
+import ModalView from "../../components/ModalView/ModalView";
 import TableView from "../../components/TableView/TableView";
 import WhiteCard from "../../components/WhiteCard/WhiteCard";
 import styles from "./UsersStyle";

@@ -72,12 +72,23 @@ const transactionTableData = [
   },
 ];
 
+const currentUser = {
+  userId: "USER_001",
+  name: "Sonish Maharjan",
+  email: "sonishmaharjan1@gmail.com",
+  password: "test1234",
+  contact: "98989898",
+  address: "Nepal, Lalitpur",
+};
+
 class Dashboard extends Component {
   render() {
     return (
       <div>
         <MainHeader>Dashboard</MainHeader>
-        <UserDetailCard />
+        <WhiteCard>
+          <UserDetailCard user={currentUser} />
+        </WhiteCard>
         <MainHeader>Transactions</MainHeader>
         <WhiteCard>
           <TableView

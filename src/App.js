@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Layout from "./components/Layout/Layout";
+import ContractDetail from "./pages/ContractDetail/ContractDetail";
+import Contracts from "./pages/Contracts/Contracts";
 import CreateUserForm from "./pages/CreateUserForm/CreateUserForm";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Login from "./pages/Login/Login";
@@ -17,6 +19,12 @@ function App() {
             <Route path="/dashboard" exact component={Dashboard} />
             <Route path="/users" exact component={Users} />
             <Route path="/users/create" exact component={CreateUserForm} />
+            <Route path="/contracts" exact component={Contracts} />
+            <Route
+              path="/contracts/:contractId"
+              exact
+              component={ContractDetail}
+            />
           </Switch>
         </Layout>
       </BrowserRouter>
