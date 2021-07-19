@@ -1,8 +1,8 @@
 import { Button, Paper, withStyles } from "@material-ui/core";
 import React, { Component } from "react";
 import styles from "./CreateUserStyle";
-import withFormValidation from "../../hoc/withFormValidation/withFormValidation";
-import Input from "../../components/Input/Input";
+import withFormValidation from "../../../hoc/withFormValidation/withFormValidation";
+import Input from "../../../components/Input/Input";
 
 const roles = [
   {

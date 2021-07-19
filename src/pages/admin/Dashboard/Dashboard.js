@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core";
-import MainHeader from "../../components/MainHeader/MainHeader";
+import MainHeader from "../../../components/MainHeader/MainHeader";
 import styles from "./DashboardStyles";
-import UserDetailCard from "../../components/UserDetailCard/UserDetailCard";
-import WhiteCard from "../../components/WhiteCard/WhiteCard";
-import TableView from "../../components/TableView/TableView";
+import UserDetailCard from "../../../components/UserDetailCard/UserDetailCard";
+import WhiteCard from "../../../components/WhiteCard/WhiteCard";
+import TableView from "../../../components/TableView/TableView";
 
 const transactionsTableHeaders = [
   "Transaction ID",

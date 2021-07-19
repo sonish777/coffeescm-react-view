@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import MainHeader from "../../components/MainHeader/MainHeader";
-import TableView from "../../components/TableView/TableView";
-import WhiteCard from "../../components/WhiteCard/WhiteCard";
+import MainHeader from "../../../components/MainHeader/MainHeader";
+import TableView from "../../../components/TableView/TableView";
+import WhiteCard from "../../../components/WhiteCard/WhiteCard";
 
 const contractTableHeaders = [
   "Contract Id",

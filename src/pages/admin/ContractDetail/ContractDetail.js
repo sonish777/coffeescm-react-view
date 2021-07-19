@@ -5,13 +5,12 @@ import {
   Tabs,
   Tab,
   withStyles,
-  Paper,
 } from "@material-ui/core";
 import { NavigateNext as NavigateNextIcon } from "@material-ui/icons";
 import React, { Component } from "react";
-import TabPanel from "../../components/TabPanel/TabPanel";
-import UserDetailCard from "../../components/UserDetailCard/UserDetailCard";
-import WhiteCard from "../../components/WhiteCard/WhiteCard";
+import TabPanel from "../../../components/TabPanel/TabPanel";
+import UserDetailCard from "../../../components/UserDetailCard/UserDetailCard";
+import WhiteCard from "../../../components/WhiteCard/WhiteCard";
 import styles from "./ContractDetailStyle";
 
 const allContracts = [

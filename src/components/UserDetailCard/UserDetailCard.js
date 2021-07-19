@@ -1,7 +1,6 @@
 import React from "react";
 import { withStyles, Container, Typography, Divider } from "@material-ui/core";
 import styles from "./UserDetailCardStyles";
-import WhiteCard from "../WhiteCard/WhiteCard";
 
 const UserDetailCard = (props) => {
   const { classes, user } = props;
@@ -31,6 +30,15 @@ const UserDetailCard = (props) => {
         <Typography className={classes.cardHeading}>Address</Typography>
         <Typography className={classes.cardText}>{user.address}</Typography>
       </Container>
+      {user.role && (
+        <>
+          <Divider orientation="vertical" flexItem />
+          <Container className={classes.cardBody}>
+            <Typography className={classes.cardHeading}>Role</Typography>
+            <Typography className={classes.cardText}>{user.role}</Typography>
+          </Container>
+        </>
+      )}
     </>
   );
 };

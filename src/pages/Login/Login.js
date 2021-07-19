@@ -11,7 +11,7 @@ class Login extends Component {
         value: "",
         error: false,
         errorText: "",
-        validation: [{ type: "REQUIRED" }],
+        validation: [{ type: "REQUIRED" }, { type: "EMAIL" }],
       },
       password: {
         value: "",
@@ -33,7 +33,7 @@ class Login extends Component {
   onSubmitHandler = (e) => {
     e.preventDefault();
     const { formData } = this.state;
-    const [updatedFormDataEmail, errorEmail] = this.props.updateErrorData(
+    const [updatedFormDataEmail] = this.props.updateErrorData(
       formData,
       "email"
     );
@@ -49,9 +49,7 @@ class Login extends Component {
         },
       },
       () => {
-        errorPassword
-          ? console.log("Loggin in with", formData)
-          : console.log("Login Failed");
+        errorPassword ? this.props.login() : console.log("Login Failed");
       }
     );
   };

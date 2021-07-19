@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
 import {
   withStyles,
   Drawer,
@@ -10,15 +10,29 @@ import {
 
 import styles from "./LayoutStyles";
 
-const navLinks = [
-  { text: "Dashboard", route: "/dashboard" },
-  { text: "Users", route: "/users" },
-  { text: "Contracts", route: "/contracts" },
-  { text: "Batches", route: "/batches" },
-];
-
 const Layout = (props) => {
+  const loggedInNavLinks = {
+    "/admin": [
+      { text: "Dashboard", route: "/admin/dashboard" },
+      { text: "Users", route: "/admin/users" },
+      { text: "Contracts", route: "/admin/contracts" },
+      { text: "Batches", route: "/admin/batches" },
+    ],
+    "/scmusers": [
+      { text: "Dashboard", route: "/dashboard" },
+      { text: "Contracts", route: "/contracts" },
+      { text: "Batches", route: "/batches" },
+    ],
+  };
+
+  const loggedOutNavLinks = [{ text: "Login", route: props.location.pathname }];
+
   const classes = props.classes;
+  const linksArr = props.isLoggedIn
+    ? loggedInNavLinks[
+        props.location.pathname.includes("/admin") ? "/admin" : "/scmusers"
+      ]
+    : loggedOutNavLinks;
   return (
     <div className={classes.root}>
       <Drawer
@@ -30,7 +44,7 @@ const Layout = (props) => {
         anchor="left"
       >
         <List>
-          {navLinks.map((link, index) => (
+          {linksArr.map((link, index) => (
             <NavLink
               key={index}
               to={link.route}
@@ -50,4 +64,4 @@ const Layout = (props) => {
   );
 };
 
-export default withStyles(styles, { withTheme: true })(Layout);
+export default withRouter(withStyles(styles, { withTheme: true })(Layout));

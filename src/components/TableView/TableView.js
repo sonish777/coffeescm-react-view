@@ -10,6 +10,31 @@ import TableRow from "@material-ui/core/TableRow";
 import styles from "./TableViewStyle";
 import { withRouter } from "react-router";
 
+const canUserUpdate = (role, batchStatus) => {
+  console.log(role, batchStatus);
+  switch (role) {
+    case "GROWER":
+      return batchStatus === "INSPECTION";
+    case "FARMINSPECTOR":
+      return batchStatus === "GROWING";
+    case "SHIPPER":
+      return batchStatus === "HARVESTED";
+    case "PROCESSOR":
+      return batchStatus === "SHIPPING";
+    default:
+      return false;
+  }
+};
+const currentUser = {
+  userId: "USER_001",
+  name: "Sonish Maharjan",
+  email: "sonishmaharjan1@gmail.com",
+  password: "test1234",
+  contact: "98989898",
+  address: "Nepal, Lalitpur",
+  role: "SHIPPER",
+};
+
 class TableView extends Component {
   state = {
     page: 0,
@@ -79,7 +104,11 @@ class TableView extends Component {
                         component="th"
                         scope="row"
                         onClick={() =>
-                          history.push(`${location.pathname}/${row.contractId}`)
+                          history.push(
+                            `${location.pathname}/${
+                              row.contractId || row.batchId
+                            }`
+                          )
                         }
                         className={classes.link}
                       >
@@ -94,6 +123,12 @@ class TableView extends Component {
                         color="primary"
                         key={i}
                         onClick={() => handler.handler(rowIndex)}
+                        disabled={
+                          !(
+                            handler.updateBatch &&
+                            canUserUpdate(currentUser.role, row.status)
+                          )
+                        }
                       >
                         {handler.text}
                       </Button>
