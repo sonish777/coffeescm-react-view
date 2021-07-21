@@ -1,7 +1,7 @@
 const styles = {
   largeAvatar: {
-    height: "50px",
-    widows: "50px",
+    height: "40px",
+    widows: "40px",
   },
 };
 

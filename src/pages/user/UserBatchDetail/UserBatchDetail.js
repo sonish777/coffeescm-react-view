@@ -31,6 +31,7 @@ import {
 } from "@material-ui/core";
 import TimelineOppositeContentAvatar from "../../../components/TimelineOppositeContentAvatar/TimelineOppositeContentAvatar";
 import TimelineData from "../../../components/TimelineData/TimelineData";
+import BatchUpdateForm from "../../../components/BatchUpdateForm/BatchUpdateForm";
 
 const batches = [
   {
@@ -248,7 +249,58 @@ const batches = [
       },
     },
   },
+  {
+    batchId: "bat_030",
+    status: "SHIPPING",
+    typeOfSeed: "Arabica",
+    coffeeFamily: "Black",
+    fertilizersUsed: ["Compost", "Manure"],
+    harvestedDateTime: "2021/07/19",
+    warehouseName: "KTM Express",
+    shippingQuantity: 120,
+    shipId: "ship_001",
+    contract: {
+      grower: {
+        userId: "grower1",
+        name: "Grower 1",
+        email: "g1@email.com",
+        password: "test1234",
+        address: "Nepal",
+      },
+      farmInspector: {
+        userId: "fi1",
+        name: "Farm Inspector 1",
+        email: "fi1@email.com",
+        password: "test1234",
+        address: "Nepal",
+      },
+      shipper: {
+        userId: "s1",
+        name: "Shipper 1",
+        email: "s1@email.com",
+        password: "test1234",
+        address: "Nepal",
+      },
+      processor: {
+        userId: "p1",
+        name: "Processor 1",
+        email: "p1@email.com",
+        password: "test1234",
+        address: "Nepal",
+      },
+    },
+  },
 ];
+
+const currentUser = {
+  userId: "USER_001",
+  name: "Sonish Maharjan",
+  email: "sonishmaharjan1@gmail.com",
+  password: "test1234",
+  contact: "98989898",
+  address: "Nepal, Lalitpur",
+  role: "SHIPPER",
+};
 
 const displayGrowingData = (batch, classes) => (
   <TimelineItem key="GROWING">
@@ -337,7 +389,7 @@ const displayShippingData = (batch, classes) => (
         <TimelineData label="Ship ID" value={batch.shipId} />
         <TimelineData
           label="Shipping Quantity"
-          value={batch.shippingQuantity}
+          value={`${batch.shippingQuantity} KG`}
         />
         <TimelineData
           label="Destination Warehouse"
@@ -363,12 +415,18 @@ const displayProcessingData = (batch, classes) => (
     <TimelineContent>
       <Paper className={classes.paperRoot} elevation={0}>
         <TimelineHeader state="Processing" />
-        <TimelineData label="Roasting Time" value={batch.roastingTime} />
+        <TimelineData
+          label="Roasting Time"
+          value={`${batch.roastingTime} minutes`}
+        />
         <TimelineData
           label="Roasting Temperature"
-          value={batch.roastingTemperature}
+          value={`${batch.roastingTemperature} degC`}
         />
-        <TimelineData label="Packaged Count" value={batch.packagedCount} />
+        <TimelineData
+          label="Packaged Count"
+          value={`${batch.packagedCount} packets`}
+        />
         <TimelineFooter
           label="Processor"
           name={batch.contract.processor.name}
@@ -378,8 +436,8 @@ const displayProcessingData = (batch, classes) => (
   </TimelineItem>
 );
 
-const displayBlankTimeline = (imgSource) => (
-  <TimelineItem>
+const displayBlankTimeline = (imgSource, update, role) => (
+  <TimelineItem key={imgSource}>
     <TimelineOppositeContent>
       <TimelineOppositeContentAvatar imgSource={imgSource} />
     </TimelineOppositeContent>
@@ -387,7 +445,9 @@ const displayBlankTimeline = (imgSource) => (
       <TimelineDot />
       <TimelineConnector />
     </TimelineSeparator>
-    <TimelineContent></TimelineContent>
+    <TimelineContent>
+      {update && <BatchUpdateForm role={role} />}
+    </TimelineContent>
   </TimelineItem>
 );
 
@@ -411,16 +471,23 @@ class UserBatchDetail extends Component {
     switch (currentBatch && currentBatch.status) {
       case "GROWING":
         batchTimeline.push(displayGrowingData(currentBatch, classes));
-        batchTimeline.push(displayBlankTimeline(Inspection));
+        currentUser.role === "FARMINSPECTOR"
+          ? batchTimeline.push(
+              displayBlankTimeline(Inspection, true, currentUser.role)
+            )
+          : batchTimeline.push(displayBlankTimeline(Inspection));
         batchTimeline.push(displayBlankTimeline(Harvest));
         batchTimeline.push(displayBlankTimeline(Shipping));
         batchTimeline.push(displayBlankTimeline(Processing));
-
         break;
       case "INSPECTION":
         batchTimeline.push(displayGrowingData(currentBatch, classes));
         batchTimeline.push(displayInspectionData(currentBatch, classes));
-        batchTimeline.push(displayBlankTimeline(Harvest));
+        currentUser.role === "GROWER"
+          ? batchTimeline.push(
+              displayBlankTimeline(Harvest, true, currentUser.role)
+            )
+          : batchTimeline.push(displayBlankTimeline(Harvest));
         batchTimeline.push(displayBlankTimeline(Shipping));
         batchTimeline.push(displayBlankTimeline(Processing));
         break;
@@ -428,7 +495,11 @@ class UserBatchDetail extends Component {
         batchTimeline.push(displayGrowingData(currentBatch, classes));
         batchTimeline.push(displayInspectionData(currentBatch, classes));
         batchTimeline.push(displayHarvestedData(currentBatch, classes));
-        batchTimeline.push(displayBlankTimeline(Shipping));
+        currentUser.role === "SHIPPER"
+          ? batchTimeline.push(
+              displayBlankTimeline(Shipping, true, currentUser.role)
+            )
+          : batchTimeline.push(displayBlankTimeline(Shipping));
         batchTimeline.push(displayBlankTimeline(Processing));
         break;
       case "SHIPPING":
@@ -436,7 +507,11 @@ class UserBatchDetail extends Component {
         batchTimeline.push(displayInspectionData(currentBatch, classes));
         batchTimeline.push(displayHarvestedData(currentBatch, classes));
         batchTimeline.push(displayShippingData(currentBatch, classes));
-        batchTimeline.push(displayBlankTimeline(Processing));
+        currentUser.role === "PROCESSOR"
+          ? batchTimeline.push(
+              displayBlankTimeline(Processing, true, currentUser.role)
+            )
+          : batchTimeline.push(displayBlankTimeline(Processing));
         break;
       case "PROCESSING":
         batchTimeline.push(displayGrowingData(currentBatch, classes));

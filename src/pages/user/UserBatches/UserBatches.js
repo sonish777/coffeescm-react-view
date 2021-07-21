@@ -1,16 +1,29 @@
+import { Chip, withStyles } from "@material-ui/core";
 import React, { Component } from "react";
 import MainHeader from "../../../components/MainHeader/MainHeader";
 import TableView from "../../../components/TableView/TableView";
 import WhiteCard from "../../../components/WhiteCard/WhiteCard";
 
+import styles from "./UserBatchStyles";
+
 const batchTableHeaders = [
   "Batch ID",
   "Associated Contract ID",
   "Status",
-  "Actions",
+  "Actions Required",
 ];
 
-export default class UserBatches extends Component {
+const currentUser = {
+  userId: "USER_001",
+  name: "Sonish Maharjan",
+  email: "sonishmaharjan1@gmail.com",
+  password: "test1234",
+  contact: "98989898",
+  address: "Nepal, Lalitpur",
+  role: "SHIPPER",
+};
+
+class UserBatches extends Component {
   state = {
     batches: [
       {
@@ -65,6 +78,18 @@ export default class UserBatches extends Component {
         harvestedDateTime: "2021/07/19",
         contract: "con__4",
       },
+      {
+        batchId: "bat_030",
+        status: "SHIPPING",
+        typeOfSeed: "Arabica",
+        coffeeFamily: "Black",
+        fertilizersUsed: ["Compost", "Manure"],
+        harvestedDateTime: "2021/07/19",
+        warehouseName: "KTM Express",
+        shippingQuantity: 120,
+        shipId: "ship_001",
+        contract: "con__2",
+      },
     ],
   };
 
@@ -83,14 +108,8 @@ export default class UserBatches extends Component {
     }
   };
 
-  handleUpdate = (idx) => {
-    const currentBatch = this.state.batches[idx];
-    console.log(currentBatch);
-  };
-
   render() {
     const batchTableData = this.state.batches;
-    const currentUser = this.props.currentUser;
     return (
       <div>
         <MainHeader>My Batches</MainHeader>
@@ -103,16 +122,21 @@ export default class UserBatches extends Component {
                 batchId: row.batchId,
                 contract: row.contract,
                 status: row.status,
+                actionsRequired: this.canUserUpdate(
+                  currentUser.role,
+                  row.status
+                ) ? (
+                  <Chip
+                    color="secondary"
+                    label="Update Available"
+                    clickable
+                    size="small"
+                  />
+                ) : (
+                  "-"
+                ),
               };
             })}
-            actions={true}
-            actionHandlers={[
-              {
-                text: "Update",
-                handler: this.handleUpdate,
-                updateBatch: true,
-              },
-            ]}
             links={true}
           />
         </WhiteCard>
@@ -120,3 +144,5 @@ export default class UserBatches extends Component {
     );
   }
 }
+
+export default withStyles(styles)(UserBatches);
