@@ -3,7 +3,7 @@ const styles = {
   modalBody: {
     width: "60vw",
     // textAlign: "center",
-    padding: "50px 30px",
+    padding: "30px 30px",
     margin: "50vh 50vw",
     transform: "translate(-50%, -50%)",
     backgroundColor: "#fff",

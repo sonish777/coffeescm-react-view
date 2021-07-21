@@ -1,16 +1,23 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core";
+import axios from "axios";
+import jsonPretty from "json-pretty-html";
+import ReactHtmlParser from "react-html-parser";
+
 import MainHeader from "../../../components/MainHeader/MainHeader";
 import styles from "./DashboardStyles";
 import UserDetailCard from "../../../components/UserDetailCard/UserDetailCard";
 import WhiteCard from "../../../components/WhiteCard/WhiteCard";
 import TableView from "../../../components/TableView/TableView";
+import ModalView from "../../../components/ModalView/ModalView";
+import "./json-pretty.css";
 
 const transactionsTableHeaders = [
   "Transaction ID",
   "Transaction Type",
   "Participant Invoking",
   "Transaction Timestamp",
+  "Actions",
 ];
 
 const transactionTableData = [
@@ -82,9 +89,73 @@ const currentUser = {
 };
 
 class Dashboard extends Component {
+  state = {
+    transactions: [],
+    viewTransactionDetail: false,
+    transactionDetail: {},
+  };
+
+  viewTransactionDetailHandler = (idx) => {
+    this.setState({
+      transactionDetail: this.state.transactions[idx],
+      viewTransactionDetail: true,
+    });
+  };
+
+  closeTransactionDetailHandler = (idx) => {
+    this.setState({
+      transactionDetail: {},
+      viewTransactionDetail: false,
+    });
+  };
+
+  async componentDidMount() {
+    const { data } = await axios.get(
+      "http://localhost:8000/api/system/historian"
+    );
+    if (data.status === "success") {
+      this.setState({
+        transactions: data.data.map((t) => {
+          return {
+            ...t,
+            transactionType:
+              t.transactionType.split(".")[
+                t.transactionType.split(".").length - 1
+              ],
+            participantInvoking: t.participantInvoking
+              ? t.participantInvoking.split("#")[1].toUpperCase()
+              : "-",
+            transactionTimestamp: `${t.transactionTimestamp.split("T")[0]}\n${
+              t.transactionTimestamp.split("T")[1].split(".")[0]
+            }`,
+          };
+        }),
+      });
+    }
+  }
+
   render() {
+    const { transactions, viewTransactionDetail, transactionDetail } =
+      this.state;
     return (
       <div>
+        {viewTransactionDetail > 0 && (
+          <ModalView
+            open={viewTransactionDetail}
+            onCloseHandler={this.closeTransactionDetailHandler}
+            modalHeader="Transaction Details"
+          >
+            <h5>Transaction ID</h5>
+            <span>{transactionDetail.transactionId}</span>
+            <h5>Resources</h5>
+            {ReactHtmlParser(
+              jsonPretty(
+                transactionDetail.eventsEmitted[0],
+                transactionDetail.eventsEmitted[0]?.dimensions
+              )
+            )}
+          </ModalView>
+        )}
         <MainHeader>Dashboard</MainHeader>
         <WhiteCard>
           <UserDetailCard user={currentUser} />
@@ -93,7 +164,21 @@ class Dashboard extends Component {
         <WhiteCard>
           <TableView
             tableHeaders={transactionsTableHeaders}
-            tableData={transactionTableData}
+            tableData={transactions.map((t) => {
+              return {
+                transactionId: t.transactionId,
+                transactionType: t.transactionType,
+                participantInvoking: t.participantInvoking,
+                transactionTimestamp: t.transactionTimestamp,
+              };
+            })}
+            actions={true}
+            actionHandlers={[
+              {
+                handler: this.viewTransactionDetailHandler,
+                text: "Details",
+              },
+            ]}
           />
         </WhiteCard>
       </div>

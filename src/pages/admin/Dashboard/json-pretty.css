@@ -1,0 +1,12 @@
+.json-key {
+  color: brown;
+  margin: 0 5px;
+}
+
+.json-string {
+  margin: 0 6px;
+}
+
+.json-pretty {
+  margin-left: 30px;
+}

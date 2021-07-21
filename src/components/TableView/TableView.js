@@ -42,7 +42,6 @@ class TableView extends Component {
       history,
       location,
     } = this.props;
-    console.log(this.props);
 
     const emptyRows =
       rowsPerPage -

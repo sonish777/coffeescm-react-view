@@ -88,7 +88,7 @@ class Users extends Component {
 
   viewCertificateHandler = (id) => {
     this.setState({
-      viewCertificate: true.valueOf,
+      viewCertificate: true,
       currentCertificate: userTableData[id],
     });
   };
