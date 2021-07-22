@@ -1,14 +1,17 @@
 import React, { Component } from "react";
 import { Button, Paper, withStyles } from "@material-ui/core";
 import axios from "axios";
-import { withCookies } from "react-cookie";
 
 import styles from "./LoginStyle";
 import Input from "../../components/Input/Input";
 import withFormValidation from "../../hoc/withFormValidation/withFormValidation";
 import { withRouter } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
+import { SnackbarContext } from "../../contexts/SnackbarContext";
+import ComponentWithLoading from "../../hoc/ComponentWithLoading";
 
 class Login extends Component {
+  static contextType = UserContext;
   state = {
     formData: {
       email: {
@@ -27,6 +30,7 @@ class Login extends Component {
         validation: [{ type: "REQUIRED" }],
       },
     },
+    isLoading: false,
   };
 
   onInputChangeHandler = (e) => {
@@ -37,8 +41,9 @@ class Login extends Component {
     });
   };
 
-  onSubmitHandler = (e) => {
+  onSubmitHandler = (e, snackbarContext) => {
     e.preventDefault();
+    this.setState({ isLoading: true });
     const { formData } = this.state;
     const [updatedFormDataEmail] = this.props.updateErrorData(
       formData,
@@ -56,13 +61,13 @@ class Login extends Component {
         },
       },
       () => {
-        this.login(errorPassword);
+        this.login(errorPassword, snackbarContext);
       }
     );
   };
 
-  login = async (errorPassword) => {
-    const { cookies, loginHandler } = this.props;
+  login = async (errorPassword, snackbarContext) => {
+    const context = this.context;
     const isAdmin = window.location.pathname.includes("/admin");
     try {
       if (errorPassword) {
@@ -76,24 +81,27 @@ class Login extends Component {
           },
         });
         if (result.data.status === "success") {
-          cookies.set("adminJwt", result.data.token);
-          loginHandler(result.data.data);
+          localStorage.setItem("adminJwt", result.data.token);
+          context.login(result.data.data);
+          snackbarContext.viewSnackbar("Login Success");
           this.props.history.push("/admin/dashboard");
         } else {
           console.log("LOGIN FAILED");
+          this.setState({ isLoading: false });
+          snackbarContext.viewSnackbar("Login Failed");
         }
       } else {
-        console.log("Login Failed");
+        this.setState({ isLoading: false });
       }
     } catch (error) {
-      error.response.data?.error.map((e) => console.log(e));
+      this.setState({ isLoading: false });
+      error.response.data?.error.map((e) => snackbarContext.viewSnackbar(e));
     }
   };
 
   render() {
     const { formData } = this.state;
     const { classes } = this.props;
-    console.log(this.props);
     return (
       <Paper className={classes.root}>
         <h3>Login</h3>
@@ -111,6 +119,7 @@ class Login extends Component {
             elementType="input"
             type="password"
             name="password"
+            autoComplete="on"
             value={formData.password.value}
             placeholder="Password"
             onInputChangeHandler={this.onInputChangeHandler}
@@ -118,13 +127,19 @@ class Login extends Component {
             helperText={formData.password.errorText}
           />
           <div className={classes.formGroup}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={this.onSubmitHandler}
-            >
-              Login
-            </Button>
+            <SnackbarContext.Consumer>
+              {(snackbarContext) => (
+                <ComponentWithLoading isLoading={this.state.isLoading}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={(e) => this.onSubmitHandler(e, snackbarContext)}
+                  >
+                    Login
+                  </Button>
+                </ComponentWithLoading>
+              )}
+            </SnackbarContext.Consumer>
           </div>
         </form>
       </Paper>
@@ -132,6 +147,4 @@ class Login extends Component {
   }
 }
 
-export default withCookies(
-  withRouter(withFormValidation(withStyles(styles)(Login)))
-);
+export default withRouter(withFormValidation(withStyles(styles)(Login)));

@@ -37,7 +37,6 @@ class TableView extends Component {
       actions,
       actionHandlers,
       links,
-      fullData,
       classes,
       history,
       location,

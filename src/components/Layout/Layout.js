@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink, withRouter } from "react-router-dom";
 import {
   withStyles,
@@ -6,9 +6,12 @@ import {
   List,
   ListItem,
   ListItemText,
+  Button,
 } from "@material-ui/core";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 import styles from "./LayoutStyles";
+import { UserContext } from "../../contexts/UserContext";
 
 const Layout = (props) => {
   const loggedInNavLinks = {
@@ -26,6 +29,7 @@ const Layout = (props) => {
   };
 
   const loggedOutNavLinks = [{ text: "Login", route: props.location.pathname }];
+  const userContext = useContext(UserContext);
 
   const classes = props.classes;
   const linksArr = props.isLoggedIn
@@ -51,12 +55,24 @@ const Layout = (props) => {
               exact
               className={classes.navLinks}
               activeClassName={classes.activeNavLink}
+              onClick={() => console.log("CLICKED")}
             >
               <ListItem button>
                 <ListItemText primary={link.text} style={{ paddingLeft: 20 }} />
               </ListItem>
             </NavLink>
           ))}
+          {props.isLoggedIn && (
+            <ListItem>
+              <Button
+                color="secondary"
+                onClick={userContext.logout}
+                style={{ padding: "0 20px" }}
+              >
+                Logout
+              </Button>
+            </ListItem>
+          )}
         </List>
       </Drawer>
       <main className={classes.content}>{props.children}</main>

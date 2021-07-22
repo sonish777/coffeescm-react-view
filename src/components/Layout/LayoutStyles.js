@@ -27,6 +27,7 @@ const styles = (theme) => {
       borderLeftColor: "#f4f4f8",
       borderLeft: "solid",
     },
+    logoutButton: {},
   };
 };
 
