@@ -11,6 +11,9 @@ const styles = {
     borderTopLeftRadius: "10px",
     borderTopRightRadius: "10px",
   },
+  paperRoot: {
+    padding: "30px",
+  },
 };
 
 export default styles;

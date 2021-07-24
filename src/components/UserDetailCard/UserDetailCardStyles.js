@@ -13,6 +13,10 @@ const styles = {
     fontWeight: "700",
     color: "#3c3c3d",
   },
+  largeAvatar: {
+    height: "80px",
+    width: "80px",
+  },
 };
 
 export default styles;

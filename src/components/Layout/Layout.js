@@ -8,7 +8,6 @@ import {
   ListItemText,
   Button,
 } from "@material-ui/core";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 import styles from "./LayoutStyles";
 import { UserContext } from "../../contexts/UserContext";
@@ -28,7 +27,13 @@ const Layout = (props) => {
     ],
   };
 
-  const loggedOutNavLinks = [{ text: "Login", route: props.location.pathname }];
+  const loggedOutNavLinks = {
+    "/admin": [{ text: "Login", route: "/admin" }],
+    "/scmusers": [
+      { text: "Login", route: "/" },
+      { text: "Register", route: "/register" },
+    ],
+  };
   const userContext = useContext(UserContext);
 
   const classes = props.classes;
@@ -36,7 +41,9 @@ const Layout = (props) => {
     ? loggedInNavLinks[
         props.location.pathname.includes("/admin") ? "/admin" : "/scmusers"
       ]
-    : loggedOutNavLinks;
+    : loggedOutNavLinks[
+        props.location.pathname.includes("/admin") ? "/admin" : "/scmusers"
+      ];
   return (
     <div className={classes.root}>
       <Drawer

@@ -17,6 +17,10 @@ const withFormValidation = (WrappedComponent) => (props) => {
         error = !emailRegex.test(formInputData.value.toLowerCase());
         errorText = "Invalid E-mail format provided";
       }
+      if (validation.type === "MINVAL") {
+        error = formInputData.value < validation.value;
+        errorText = `Minimum value is ${validation.value}`;
+      }
     });
     formInputData.error = error;
     formInputData.errorText = error && errorText;

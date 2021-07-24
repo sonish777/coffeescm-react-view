@@ -15,12 +15,15 @@ const App = (props) => {
   const snackbarContext = useContext(SnackbarContext);
 
   useEffect(() => {
-    const loadUser = async (adminToken) => {
-      axios.defaults.headers.common["x-auth-token"] = adminToken;
+    const isAdmin = window.location.pathname.includes("/admin");
+    const loadUser = async (token) => {
+      axios.defaults.headers.common["x-auth-token"] = token;
       try {
         const result = await axios({
           method: "GET",
-          url: "http://localhost:8000/api/system/me",
+          url: isAdmin
+            ? "http://localhost:8000/api/system/me"
+            : "http://localhost:8000/api/scmusers/me",
         });
         if (result.data.status === "success") {
           userContext.login(result.data.data);
@@ -30,9 +33,9 @@ const App = (props) => {
         console.log("Not Logged In");
       }
     };
-    const adminToken = localStorage.getItem("adminJwt");
-    if (adminToken) {
-      loadUser(adminToken);
+    const token = localStorage.getItem(isAdmin ? "adminJwt" : "userJwt");
+    if (token) {
+      loadUser(token);
     }
   }, []);
 

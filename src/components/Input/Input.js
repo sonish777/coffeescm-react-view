@@ -28,6 +28,47 @@ const Input = ({
         </div>
       );
       break;
+    case "number":
+      formElement = (
+        <div className={classes.root}>
+          <TextField
+            classes={{
+              root: classes.formInput,
+            }}
+            type="number"
+            variant="filled"
+            InputProps={{
+              inputProps: {
+                min: props.min ? props.min : 0,
+              },
+            }}
+            {...props}
+            onChange={onInputChangeHandler}
+            onBlur={onBlurHandler}
+          />
+        </div>
+      );
+      break;
+    case "date":
+      formElement = (
+        <div className={classes.root}>
+          <TextField
+            classes={{
+              root: classes.formInput,
+            }}
+            type="date"
+            label={props.placeholder}
+            variant="filled"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            {...props}
+            onChange={onInputChangeHandler}
+            onBlur={onBlurHandler}
+          />
+        </div>
+      );
+      break;
     case "select":
       formElement = (
         <div className={classes.root}>

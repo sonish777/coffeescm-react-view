@@ -12,7 +12,8 @@ export const UserContextProvider = (props) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("adminJwt");
+    const isAdmin = window.location.pathname.includes("/admin");
+    localStorage.removeItem(isAdmin ? "adminJwt" : "userJwt");
     setIsAuthenticated(false);
     setCurrentUser({});
   };

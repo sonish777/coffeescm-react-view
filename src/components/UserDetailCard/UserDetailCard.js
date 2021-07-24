@@ -1,5 +1,11 @@
 import React from "react";
-import { withStyles, Container, Typography, Divider } from "@material-ui/core";
+import {
+  withStyles,
+  Container,
+  Typography,
+  Divider,
+  Avatar,
+} from "@material-ui/core";
 import styles from "./UserDetailCardStyles";
 import WhiteCard from "../WhiteCard/WhiteCard";
 
@@ -7,6 +13,15 @@ const UserDetailCard = (props) => {
   const { classes, user } = props;
   return user ? (
     <>
+      {user.avatarPath && (
+        <Container className={classes.cardBody}>
+          <Avatar
+            alt={user.name}
+            src={`http://localhost:8000/images/${user.avatarPath}`}
+            className={classes.largeAvatar}
+          />
+        </Container>
+      )}
       <Container className={classes.cardBody}>
         <Typography className={classes.cardHeading}>User ID</Typography>
         <Typography className={classes.cardText}>{user.userId}</Typography>
@@ -26,7 +41,7 @@ const UserDetailCard = (props) => {
         <Typography className={classes.cardHeading}>Contact</Typography>
         <Typography className={classes.cardText}>{user.contact}</Typography>
       </Container>
-      <Divider orientation="vertical" flexItem />
+      {/* <Divider orientation="vertical" flexItem /> */}
       {/* <Container className={classes.cardBody}>
         <Typography className={classes.cardHeading}>Address</Typography>
         <Typography className={classes.cardText}>{user.address}</Typography>

@@ -1,8 +1,12 @@
 import { Chip, withStyles } from "@material-ui/core";
+import axios from "axios";
 import React, { Component } from "react";
 import MainHeader from "../../../components/MainHeader/MainHeader";
 import TableView from "../../../components/TableView/TableView";
 import WhiteCard from "../../../components/WhiteCard/WhiteCard";
+import { UserContext } from "../../../contexts/UserContext";
+import { setAuthToken } from "../../../helpers";
+import ComponentWithLoading from "../../../hoc/ComponentWithLoading";
 
 import styles from "./UserBatchStyles";
 
@@ -13,85 +17,26 @@ const batchTableHeaders = [
   "Actions Required",
 ];
 
-const currentUser = {
-  userId: "USER_001",
-  name: "Sonish Maharjan",
-  email: "sonishmaharjan1@gmail.com",
-  password: "test1234",
-  contact: "98989898",
-  address: "Nepal, Lalitpur",
-  role: "SHIPPER",
-};
-
 class UserBatches extends Component {
+  static contextType = UserContext;
   state = {
-    batches: [
-      {
-        batchId: "bat_001",
-        status: "GROWING",
-        contract: "con__1",
-      },
-      {
-        batchId: "bat_002",
-        status: "PROCESSING",
-        typeOfSeed: "Arabica",
-        coffeeFamily: "Black",
-        fertilizersUsed: ["Compost", "Manure"],
-        harvestedDateTime: "2021/07/19",
-        warehouseName: "KTM Express",
-        shippingQuantity: 120,
-        shipId: "ship_001",
-        contract: "con__2",
-      },
-      {
-        batchId: "bat_003",
-        status: "INSPECTION",
-        typeOfSeed: "Arabica",
-        coffeeFamily: "Black",
-        fertilizersUsed: ["Compost", "Manure"],
-        contract: "con__3",
-      },
-      {
-        batchId: "bat_005",
-        status: "HARVESTED",
-        typeOfSeed: "Arabica",
-        coffeeFamily: "Black",
-        fertilizersUsed: ["Compost", "Manure"],
-        harvestedDateTime: "2021/07/19",
-        contract: "con__4",
-      },
-      {
-        batchId: "bat_007",
-        status: "HARVESTED",
-        typeOfSeed: "Arabica",
-        coffeeFamily: "Black",
-        fertilizersUsed: ["Compost", "Manure"],
-        harvestedDateTime: "2021/07/19",
-        contract: "con__4",
-      },
-      {
-        batchId: "bat_022",
-        status: "HARVESTED",
-        typeOfSeed: "Arabica",
-        coffeeFamily: "Black",
-        fertilizersUsed: ["Compost", "Manure"],
-        harvestedDateTime: "2021/07/19",
-        contract: "con__4",
-      },
-      {
-        batchId: "bat_030",
-        status: "SHIPPING",
-        typeOfSeed: "Arabica",
-        coffeeFamily: "Black",
-        fertilizersUsed: ["Compost", "Manure"],
-        harvestedDateTime: "2021/07/19",
-        warehouseName: "KTM Express",
-        shippingQuantity: 120,
-        shipId: "ship_001",
-        contract: "con__2",
-      },
-    ],
+    batches: [],
   };
+
+  async componentDidMount() {
+    try {
+      setAuthToken();
+      const result = await axios.get("http://localhost:8000/api/batches");
+      if (result.data.status === "success") {
+        console.log(result.data);
+        this.setState({
+          batches: result.data.data,
+        });
+      }
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  }
 
   canUserUpdate = (role, batchStatus) => {
     switch (role) {
@@ -110,35 +55,39 @@ class UserBatches extends Component {
 
   render() {
     const batchTableData = this.state.batches;
+    const context = this.context;
+
     return (
       <div>
         <MainHeader>My Batches</MainHeader>
         <WhiteCard>
-          <TableView
-            currentUser={currentUser}
-            tableHeaders={batchTableHeaders}
-            tableData={batchTableData.map((row) => {
-              return {
-                batchId: row.batchId,
-                contract: row.contract,
-                status: row.status,
-                actionsRequired: this.canUserUpdate(
-                  currentUser.role,
-                  row.status
-                ) ? (
-                  <Chip
-                    color="secondary"
-                    label="Update Available"
-                    clickable
-                    size="small"
-                  />
-                ) : (
-                  "-"
-                ),
-              };
-            })}
-            links={true}
-          />
+          <ComponentWithLoading isLoading={batchTableData.length === 0}>
+            <TableView
+              currentUser={context.currentUser}
+              tableHeaders={batchTableHeaders}
+              tableData={batchTableData.map((row) => {
+                return {
+                  batchId: row.batchId,
+                  contract: row.contract.contractId,
+                  status: row.status,
+                  actionsRequired: this.canUserUpdate(
+                    context.currentUser.role,
+                    row.status
+                  ) ? (
+                    <Chip
+                      color="secondary"
+                      label="Update Available"
+                      clickable
+                      size="small"
+                    />
+                  ) : (
+                    "-"
+                  ),
+                };
+              })}
+              links={true}
+            />
+          </ComponentWithLoading>
         </WhiteCard>
       </div>
     );

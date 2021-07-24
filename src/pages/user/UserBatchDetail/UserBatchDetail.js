@@ -32,275 +32,10 @@ import {
 import TimelineOppositeContentAvatar from "../../../components/TimelineOppositeContentAvatar/TimelineOppositeContentAvatar";
 import TimelineData from "../../../components/TimelineData/TimelineData";
 import BatchUpdateForm from "../../../components/BatchUpdateForm/BatchUpdateForm";
-
-const batches = [
-  {
-    batchId: "bat_001",
-    status: "GROWING",
-    contract: {
-      grower: {
-        userId: "grower1",
-        name: "Grower 1",
-        email: "g1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      farmInspector: {
-        userId: "fi1",
-        name: "Farm Inspector 1",
-        email: "fi1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-    },
-  },
-  {
-    batchId: "bat_002",
-    status: "PROCESSING",
-    typeOfSeed: "Arabica",
-    coffeeFamily: "Black",
-    fertilizersUsed: ["Compost", "Manure", "Amonium", "Nitrate"],
-    harvestedDateTime: "2021/07/19",
-    warehouseName: "KTM Express",
-    shippingQuantity: 120,
-    shipId: "ship_001",
-    roastingTime: "210",
-    roastingTemperature: "112",
-    packagedCount: "1200",
-    contract: {
-      grower: {
-        userId: "grower1",
-        name: "Grower 1",
-        email: "g1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      farmInspector: {
-        userId: "fi1",
-        name: "Farm Inspector 1",
-        email: "fi1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      shipper: {
-        userId: "s1",
-        name: "Shipper 1",
-        email: "s1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      processor: {
-        userId: "p1",
-        name: "Processor 1",
-        email: "p1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-    },
-  },
-  {
-    batchId: "bat_003",
-    status: "INSPECTION",
-    typeOfSeed: "Arabica",
-    coffeeFamily: "Black",
-    fertilizersUsed: ["Compost", "Manure"],
-    contract: {
-      grower: {
-        userId: "grower1",
-        name: "Grower 1",
-        email: "g1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      farmInspector: {
-        userId: "fi1",
-        name: "Farm Inspector 1",
-        email: "fi1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      shipper: {
-        userId: "s1",
-        name: "Shipper 1",
-        email: "s1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      processor: {
-        userId: "p1",
-        name: "Processor 1",
-        email: "p1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-    },
-  },
-  {
-    batchId: "bat_005",
-    status: "HARVESTED",
-    typeOfSeed: "Arabica",
-    coffeeFamily: "Black",
-    fertilizersUsed: ["Compost", "Manure"],
-    harvestedDateTime: "2021/07/19",
-    contract: {
-      grower: {
-        userId: "grower1",
-        name: "Grower 1",
-        email: "g1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      farmInspector: {
-        userId: "fi1",
-        name: "Farm Inspector 1",
-        email: "fi1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      shipper: {
-        userId: "s1",
-        name: "Shipper 1",
-        email: "s1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      processor: {
-        userId: "p1",
-        name: "Processor 1",
-        email: "p1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-    },
-  },
-  {
-    batchId: "bat_007",
-    status: "HARVESTED",
-    typeOfSeed: "Arabica",
-    coffeeFamily: "Black",
-    fertilizersUsed: ["Compost", "Manure"],
-    harvestedDateTime: "2021/07/19",
-    contract: {
-      grower: {
-        userId: "grower1",
-        name: "Grower 1",
-        email: "g1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      farmInspector: {
-        userId: "fi1",
-        name: "Farm Inspector 1",
-        email: "fi1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      shipper: {
-        userId: "s1",
-        name: "Shipper 1",
-        email: "s1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      processor: {
-        userId: "p1",
-        name: "Processor 1",
-        email: "p1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-    },
-  },
-  {
-    batchId: "bat_022",
-    status: "HARVESTED",
-    typeOfSeed: "Arabica",
-    coffeeFamily: "Black",
-    fertilizersUsed: ["Compost", "Manure"],
-    harvestedDateTime: "2021/07/19",
-    contract: {
-      grower: {
-        userId: "grower1",
-        name: "Grower 1",
-        email: "g1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      farmInspector: {
-        userId: "fi1",
-        name: "Farm Inspector 1",
-        email: "fi1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      shipper: {
-        userId: "s1",
-        name: "Shipper 1",
-        email: "s1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      processor: {
-        userId: "p1",
-        name: "Processor 1",
-        email: "p1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-    },
-  },
-  {
-    batchId: "bat_030",
-    status: "SHIPPING",
-    typeOfSeed: "Arabica",
-    coffeeFamily: "Black",
-    fertilizersUsed: ["Compost", "Manure"],
-    harvestedDateTime: "2021/07/19",
-    warehouseName: "KTM Express",
-    shippingQuantity: 120,
-    shipId: "ship_001",
-    contract: {
-      grower: {
-        userId: "grower1",
-        name: "Grower 1",
-        email: "g1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      farmInspector: {
-        userId: "fi1",
-        name: "Farm Inspector 1",
-        email: "fi1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      shipper: {
-        userId: "s1",
-        name: "Shipper 1",
-        email: "s1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-      processor: {
-        userId: "p1",
-        name: "Processor 1",
-        email: "p1@email.com",
-        password: "test1234",
-        address: "Nepal",
-      },
-    },
-  },
-];
-
-const currentUser = {
-  userId: "USER_001",
-  name: "Sonish Maharjan",
-  email: "sonishmaharjan1@gmail.com",
-  password: "test1234",
-  contact: "98989898",
-  address: "Nepal, Lalitpur",
-  role: "SHIPPER",
-};
+import axios from "axios";
+import ComponentWithLoading from "../../../hoc/ComponentWithLoading";
+import { UserContext } from "../../../contexts/UserContext";
+import { setAuthToken } from "../../../helpers";
 
 const displayGrowingData = (batch, classes) => (
   <TimelineItem key="GROWING">
@@ -363,8 +98,14 @@ const displayHarvestedData = (batch, classes) => (
       <Paper className={classes.paperRoot} elevation={0}>
         <TimelineHeader state="Harvested" />
         <TimelineData
+          label="Dry Parchment Quantity"
+          value={`${batch.dryParchmentQuantity} KG`}
+        />
+        <TimelineData
           label="Harvested Date & Time"
-          value={batch.harvestedDateTime}
+          value={`${batch.harvestedDateTime.split("T")[0]} / ${
+            batch.harvestedDateTime.split("T")[1].split(".")[0]
+          }`}
         />
         <TimelineFooter label="Harvestor" name={batch.contract.grower.name} />
       </Paper>
@@ -387,6 +128,8 @@ const displayShippingData = (batch, classes) => (
       <Paper className={classes.paperRoot} elevation={0}>
         <TimelineHeader state="Shipping" />
         <TimelineData label="Ship ID" value={batch.shipId} />
+        <TimelineData label="Ship Name" value={batch.shipName} />
+
         <TimelineData
           label="Shipping Quantity"
           value={`${batch.shippingQuantity} KG`}
@@ -394,6 +137,10 @@ const displayShippingData = (batch, classes) => (
         <TimelineData
           label="Destination Warehouse"
           value={batch.warehouseName}
+        />
+        <TimelineData
+          label="Warehouse Address"
+          value={batch.warehouseAddress}
         />
         <TimelineFooter label="Shipper" name={batch.contract.shipper.name} />
       </Paper>
@@ -421,11 +168,15 @@ const displayProcessingData = (batch, classes) => (
         />
         <TimelineData
           label="Roasting Temperature"
-          value={`${batch.roastingTemperature} degC`}
+          value={`${batch.temperature} degC`}
         />
         <TimelineData
           label="Packaged Count"
           value={`${batch.packagedCount} packets`}
+        />
+        <TimelineData
+          label="Packaged Date"
+          value={batch.packagingDateTime.split("T")[0]}
         />
         <TimelineFooter
           label="Processor"
@@ -436,7 +187,7 @@ const displayProcessingData = (batch, classes) => (
   </TimelineItem>
 );
 
-const displayBlankTimeline = (imgSource, update, role) => (
+const displayBlankTimeline = (imgSource, update, role, updateBatchHandler) => (
   <TimelineItem key={imgSource}>
     <TimelineOppositeContent>
       <TimelineOppositeContentAvatar imgSource={imgSource} />
@@ -446,34 +197,61 @@ const displayBlankTimeline = (imgSource, update, role) => (
       <TimelineConnector />
     </TimelineSeparator>
     <TimelineContent>
-      {update && <BatchUpdateForm role={role} />}
+      {update && (
+        <BatchUpdateForm role={role} updateBatchHandler={updateBatchHandler} />
+      )}
     </TimelineContent>
   </TimelineItem>
 );
 
 class UserBatchDetail extends Component {
+  static contextType = UserContext;
+
   state = {
     currentBatch: null,
   };
 
-  componentDidMount() {
-    const { batchId } = this.props.match.params;
-    const currentBatch = batches.find((el) => el.batchId === batchId);
-    this.setState({
-      currentBatch,
-    });
-    console.log(currentBatch);
+  async componentDidMount() {
+    this.loadCurrentBatch();
   }
 
-  batchTimelineGenerator = (classes) => {
+  reloadCurrentBatch = () => {
+    this.loadCurrentBatch();
+  };
+
+  loadCurrentBatch = async () => {
+    const { batchId } = this.props.match.params;
+    try {
+      setAuthToken();
+      const result = await axios.get(
+        `http://localhost:8000/api/batches/${batchId}`
+      );
+      if (result.data.status === "success") {
+        console.log(result.data);
+        this.setState({
+          currentBatch: result.data.data,
+        });
+      }
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  batchTimelineGenerator = (classes, updateBatchHandler) => {
     const { currentBatch } = this.state;
+    const { currentUser } = this.context;
     const batchTimeline = [];
     switch (currentBatch && currentBatch.status) {
       case "GROWING":
         batchTimeline.push(displayGrowingData(currentBatch, classes));
         currentUser.role === "FARMINSPECTOR"
           ? batchTimeline.push(
-              displayBlankTimeline(Inspection, true, currentUser.role)
+              displayBlankTimeline(
+                Inspection,
+                true,
+                currentUser.role,
+                updateBatchHandler
+              )
             )
           : batchTimeline.push(displayBlankTimeline(Inspection));
         batchTimeline.push(displayBlankTimeline(Harvest));
@@ -485,7 +263,12 @@ class UserBatchDetail extends Component {
         batchTimeline.push(displayInspectionData(currentBatch, classes));
         currentUser.role === "GROWER"
           ? batchTimeline.push(
-              displayBlankTimeline(Harvest, true, currentUser.role)
+              displayBlankTimeline(
+                Harvest,
+                true,
+                currentUser.role,
+                updateBatchHandler
+              )
             )
           : batchTimeline.push(displayBlankTimeline(Harvest));
         batchTimeline.push(displayBlankTimeline(Shipping));
@@ -497,7 +280,12 @@ class UserBatchDetail extends Component {
         batchTimeline.push(displayHarvestedData(currentBatch, classes));
         currentUser.role === "SHIPPER"
           ? batchTimeline.push(
-              displayBlankTimeline(Shipping, true, currentUser.role)
+              displayBlankTimeline(
+                Shipping,
+                true,
+                currentUser.role,
+                updateBatchHandler
+              )
             )
           : batchTimeline.push(displayBlankTimeline(Shipping));
         batchTimeline.push(displayBlankTimeline(Processing));
@@ -509,7 +297,12 @@ class UserBatchDetail extends Component {
         batchTimeline.push(displayShippingData(currentBatch, classes));
         currentUser.role === "PROCESSOR"
           ? batchTimeline.push(
-              displayBlankTimeline(Processing, true, currentUser.role)
+              displayBlankTimeline(
+                Processing,
+                true,
+                currentUser.role,
+                updateBatchHandler
+              )
             )
           : batchTimeline.push(displayBlankTimeline(Processing));
         break;
@@ -523,13 +316,17 @@ class UserBatchDetail extends Component {
       default:
         return;
     }
-    return batchTimeline;
+    return currentBatch && batchTimeline;
   };
 
   render() {
-    const currentBatch = this.state.currentBatch;
+    const { currentBatch } = this.state;
     const { classes } = this.props;
-    const batchTimeline = this.batchTimelineGenerator(classes);
+    const { batchId } = this.props.match.params;
+    const batchTimeline = this.batchTimelineGenerator(
+      classes,
+      this.reloadCurrentBatch
+    );
     return (
       <div>
         <Breadcrumbs
@@ -539,11 +336,11 @@ class UserBatchDetail extends Component {
           <Link color="inherit" href="/batches">
             Batches
           </Link>
-          <Typography color="textPrimary">
-            {currentBatch && currentBatch.batchId.toUpperCase()}
-          </Typography>
+          <Typography color="textPrimary">{batchId}</Typography>
         </Breadcrumbs>
-        <Timeline align="alternate">{batchTimeline}</Timeline>
+        <ComponentWithLoading isLoading={currentBatch === null}>
+          <Timeline align="alternate">{batchTimeline}</Timeline>
+        </ComponentWithLoading>
       </div>
     );
   }

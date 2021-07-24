@@ -13,6 +13,7 @@ import ModalView from "../../../components/ModalView/ModalView";
 import "./json-pretty.css";
 import { UserContext } from "../../../contexts/UserContext";
 import ComponentWithLoading from "../../../hoc/ComponentWithLoading";
+import { setAuthToken } from "../../../helpers";
 
 const transactionsTableHeaders = [
   "Transaction ID",
@@ -45,6 +46,7 @@ class Dashboard extends Component {
   };
 
   async componentDidMount() {
+    setAuthToken();
     const { data } = await axios.get(
       "http://localhost:8000/api/system/historian"
     );

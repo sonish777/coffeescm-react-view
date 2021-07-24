@@ -9,7 +9,9 @@ const TimelineData = (props) => {
   return (
     <>
       <div className={classes.flexBox}>
-        <Typography variant="h6">{label}</Typography>
+        <Typography variant="h6" className={classes.label}>
+          {label}
+        </Typography>
         {Array.isArray(value) ? (
           <List>
             {value.map((el, idx) => (
