@@ -10,6 +10,7 @@ import ComponentWithLoading from "../../hoc/ComponentWithLoading";
 import styles from "./ContractsStyle";
 import ModalView from "../../components/ModalView/ModalView";
 import Input from "../../components/Input/Input";
+import SearchResultBox from "../../components/SearchResultBox/SearchResultBox";
 
 const contractTableHeaders = [
   "Contract Id",
@@ -25,11 +26,32 @@ class Contracts extends Component {
     isSubmitting: false,
     showCreateContractForm: false,
     grower: "",
+    growerId: "",
+    growersList: [],
+    searchedList: [],
   };
 
   async componentDidMount() {
     this.loadContracts();
+    window.location.pathname.includes("/admin") && this.loadGrowers();
   }
+
+  loadGrowers = async () => {
+    try {
+      setAuthToken();
+      const result = await axios.get(
+        "http://localhost:8000/api/scmusers/grower"
+      );
+      if (result.data.status === "success") {
+        this.setState({
+          growersList: result.data.data,
+        });
+      }
+    } catch (error) {
+      console.log(error.response.data);
+      error.response.data?.error.map((e) => this.context.viewSnackbar(e));
+    }
+  };
 
   loadContracts = async () => {
     try {
@@ -86,12 +108,31 @@ class Contracts extends Component {
   closeCreateContractForm = () => {
     this.setState({
       showCreateContractForm: false,
+      grower: "",
+      growerId: "",
+      searchedList: [],
     });
   };
 
   onInputChangeHandler = (e) => {
+    const growerName = e.target.value;
+    const tempList = [];
+    this.state.growersList.forEach((g) => {
+      if (g.name.toLowerCase().includes(growerName)) {
+        tempList.push(g);
+      }
+    });
     this.setState({
       grower: e.target.value,
+      searchedList: tempList,
+    });
+  };
+
+  setGrowerId = (e, userId) => {
+    this.setState({
+      growerId: userId,
+      grower: userId,
+      searchedList: [],
     });
   };
 
@@ -109,10 +150,13 @@ class Contracts extends Component {
             elementType="input"
             name="grower"
             value={grower}
-            placeholder="Grower ID"
+            placeholder="Search by Growers Name"
             onInputChangeHandler={this.onInputChangeHandler}
           />
-
+          <SearchResultBox
+            searchResultsList={this.state.searchedList}
+            setUserIdHandler={this.setGrowerId}
+          />
           <ComponentWithLoading isLoading={this.state.isSubmitting}>
             <Button
               color="primary"

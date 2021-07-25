@@ -1,19 +1,23 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { Component } from "react";
 
 import Login from "../pages/Login/Login";
-import ContractDetail from "../pages/ContractDetail/ContractDetail";
+import ContractDetail from "../pages/shared/ContractDetail/ContractDetail";
 import Contracts from "../pages/Contracts/Contracts";
 import CreateUserForm from "../pages/admin/CreateUserForm/CreateUserForm";
 import Dashboard from "../pages/admin/Dashboard/Dashboard";
 import Users from "../pages/admin/Users/Users";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoutes";
+import UserBatches from "../pages/shared/UserBatches/UserBatches";
+import UserBatchDetail from "../pages/user/UserBatchDetail/UserBatchDetail";
 
 class AdminRoutes extends Component {
   render() {
-    return (
+    return localStorage.getItem("userJwt") ? (
+      <Redirect to="/dashboard" />
+    ) : (
       <div>
         <Switch>
           <PublicRoute path="/admin" exact component={Login} isAdmin />
@@ -23,8 +27,8 @@ class AdminRoutes extends Component {
             component={Dashboard}
             isAdmin
           />
-          <Route path="/admin/users" exact component={Users} />
-          <Route
+          <ProtectedRoute path="/admin/users" exact component={Users} isAdmin />
+          <ProtectedRoute
             path="/admin/users/create"
             exact
             component={CreateUserForm}
@@ -40,6 +44,18 @@ class AdminRoutes extends Component {
             path="/admin/contracts/:contractId"
             exact
             component={ContractDetail}
+            isAdmin
+          />
+          <ProtectedRoute
+            path="/admin/batches"
+            exact
+            component={UserBatches}
+            isAdmin
+          />
+          <ProtectedRoute
+            path="/admin/batches/:batchId"
+            exact
+            component={UserBatchDetail}
             isAdmin
           />
         </Switch>

@@ -8,3 +8,7 @@ export const setAuthToken = () => {
       isAdmin ? "adminJwt" : "userJwt"
     );
 };
+
+export const beautifyDateTime = (dateTime) => {
+  return `${dateTime.split("T")[0]} ${dateTime.split("T")[1].split(".")[0]}`;
+};

@@ -4,8 +4,6 @@ const styles = {
     width: "100%",
   },
   activeTab: {
-    // backgroundColor: "#1f212b",
-    // color: "#e8e8e8",
     backgroundColor: "#1f212b",
     color: "#e8e8e8",
     borderTopLeftRadius: "10px",

@@ -22,13 +22,8 @@ import {
   NavigateNext as NavigateNextIcon,
   Check as CheckIcon,
 } from "@material-ui/icons";
-import {
-  Breadcrumbs,
-  Link,
-  Paper,
-  Typography,
-  withStyles,
-} from "@material-ui/core";
+import { Breadcrumbs, Paper, Typography, withStyles } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import TimelineOppositeContentAvatar from "../../../components/TimelineOppositeContentAvatar/TimelineOppositeContentAvatar";
 import TimelineData from "../../../components/TimelineData/TimelineData";
 import BatchUpdateForm from "../../../components/BatchUpdateForm/BatchUpdateForm";
@@ -333,7 +328,13 @@ class UserBatchDetail extends Component {
           aria-label="breadcrumb"
           separator={<NavigateNextIcon fontSize="small" />}
         >
-          <Link color="inherit" href="/batches">
+          <Link
+            to={
+              window.location.pathname.includes("/admin")
+                ? "/admin/batches"
+                : "/batches"
+            }
+          >
             Batches
           </Link>
           <Typography color="textPrimary">{batchId}</Typography>

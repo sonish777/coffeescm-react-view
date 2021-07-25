@@ -118,7 +118,7 @@ class Users extends Component {
         </ModalView>
         <div className={classes.header}>
           <MainHeader>Users</MainHeader>
-          <Link to="/users/create" className={classes.link}>
+          <Link to="/admin/users/create" className={classes.link}>
             Create User
           </Link>
         </div>

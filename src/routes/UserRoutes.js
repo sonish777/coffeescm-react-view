@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch } from "react-router-dom";
+import { Redirect, Switch } from "react-router-dom";
 import Login from "../pages/Login/Login";
 import UserBatchDetail from "../pages/user/UserBatchDetail/UserBatchDetail";
 import UserBatches from "../pages/user/UserBatches/UserBatches";
@@ -8,10 +8,12 @@ import PublicRoute from "./PublicRoutes";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "../pages/user/Register/Register";
 import Contracts from "../pages/Contracts/Contracts";
-import ContractDetail from "../pages/ContractDetail/ContractDetail";
+import ContractDetail from "../pages/shared/ContractDetail/ContractDetail";
 
 const UserRoutes = () => {
-  return (
+  return localStorage.getItem("adminJwt") ? (
+    <Redirect to="/admin/dashboard" />
+  ) : (
     <Switch>
       <PublicRoute path="/" exact component={Login} />
       <PublicRoute path="/register" exact component={Register} />

@@ -13,5 +13,12 @@ const styles = {
     margin: "10px 0",
     width: "100%",
   },
+  inputFileRoot: {
+    marginRight: "auto",
+    margin: "4px 0",
+  },
+  inputFile: {
+    width: "100%",
+  },
 };
 export default styles;

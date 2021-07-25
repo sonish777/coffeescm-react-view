@@ -1,24 +1,27 @@
 import {
   Breadcrumbs,
   Typography,
-  Link,
   Tabs,
   Tab,
   withStyles,
   Button,
   Paper,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { NavigateNext as NavigateNextIcon } from "@material-ui/icons";
 import axios from "axios";
 import React, { Component } from "react";
-import TabPanel from "../../components/TabPanel/TabPanel";
-import UserDetailCard from "../../components/UserDetailCard/UserDetailCard";
-import WhiteCard from "../../components/WhiteCard/WhiteCard";
-import { SnackbarContext } from "../../contexts/SnackbarContext";
-import { setAuthToken } from "../../helpers";
-import ComponentWithLoading from "../../hoc/ComponentWithLoading";
+import TabPanel from "../../../components/TabPanel/TabPanel";
+import UserDetailCard from "../../../components/UserDetailCard/UserDetailCard";
+import WhiteCard from "../../../components/WhiteCard/WhiteCard";
+import { SnackbarContext } from "../../../contexts/SnackbarContext";
+import { setAuthToken } from "../../../helpers";
+import ComponentWithLoading from "../../../hoc/ComponentWithLoading";
 import styles from "./ContractDetailStyle";
-import Input from "../../components/Input/Input";
+import Input from "../../../components/Input/Input";
+import SearchResultBox from "../../../components/SearchResultBox/SearchResultBox";
+import MainHeader from "../../../components/MainHeader/MainHeader";
+import BatchDetail from "../../../components/BatchDetail/BatchDetail";
 
 class ContractDetail extends Component {
   static contextType = SnackbarContext;
@@ -29,11 +32,19 @@ class ContractDetail extends Component {
     shipper: "",
     processor: "",
     isSubmitting: false,
+    farmInspectorList: [],
+    shipperList: [],
+    processorList: [],
+    searchedList: [],
   };
 
   onTabChangeHandler = (e, index) => {
     this.setState({
       currentTabIndex: index,
+      searchedList: [],
+      farmInspector: "",
+      shipper: "",
+      processor: "",
     });
   };
 
@@ -64,8 +75,26 @@ class ContractDetail extends Component {
   };
 
   onInputChangeHandler = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    const tempList = [];
+    this.state[name + "List"].forEach((u) => {
+      if (u.name.toLowerCase().includes(value)) {
+        tempList.push(u);
+      }
+    });
     this.setState({
-      [e.target.name]: e.target.value,
+      searchedList: tempList,
+      [name]: value,
+    });
+  };
+
+  setUserId = (e, userId) => {
+    const participants = ["grower", "farmInspector", "shipper", "processor"];
+    const index = this.state.currentTabIndex;
+    this.setState({
+      [participants[index]]: userId,
+      searchedList: [],
     });
   };
 
@@ -98,10 +127,29 @@ class ContractDetail extends Component {
     }
   };
 
+  loadUser = async (name) => {
+    try {
+      setAuthToken();
+      const result = await axios.get(
+        `http://localhost:8000/api/scmusers/${name}`
+      );
+      if (result.data.status === "success") {
+        this.setState({
+          [name + "List"]: result.data.data,
+        });
+      }
+    } catch (error) {
+      console.log(error.response.data);
+      error.response.data?.error.map((e) => this.context.viewSnackbar(e));
+    }
+  };
+
   render() {
     const { currentContract, currentTabIndex } = this.state;
+    // const { batch } = currentContract;
     const { classes } = this.props;
     const addParticipantForm = (value, name, placeholder) => {
+      this.state[name + "List"].length === 0 && this.loadUser(name);
       return (
         <>
           <Input
@@ -109,6 +157,10 @@ class ContractDetail extends Component {
             name={name}
             placeholder={placeholder}
             onInputChangeHandler={this.onInputChangeHandler}
+          />
+          <SearchResultBox
+            searchResultsList={this.state.searchedList}
+            setUserIdHandler={this.setUserId}
           />
           <ComponentWithLoading isLoading={this.state.isSubmitting}>
             <Button
@@ -128,7 +180,13 @@ class ContractDetail extends Component {
           aria-label="breadcrumb"
           separator={<NavigateNextIcon fontSize="small" />}
         >
-          <Link color="inherit" href="/contracts">
+          <Link
+            to={
+              window.location.pathname.includes("/admin")
+                ? "/admin/contracts"
+                : "/contracts"
+            }
+          >
             Contracts
           </Link>
           <Typography color="textPrimary">
@@ -233,6 +291,18 @@ class ContractDetail extends Component {
               )}
             </TabPanel>
           </WhiteCard>
+          <Paper className={classes.paperRoot}>
+            <MainHeader>Batch Detail</MainHeader>
+            <Link
+              to={`${
+                window.location.pathname.includes("/admin") ? "/admin" : ""
+              }/batches/${currentContract.batch.batchId}`}
+            >
+              View Batch Timeline
+            </Link>
+
+            <BatchDetail batch={currentContract.batch} />
+          </Paper>
         </section>
       </>
     ) : (

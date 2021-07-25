@@ -53,13 +53,17 @@ const Layout = (props) => {
           paper: classes.drawerPaper,
         }}
         anchor="left"
+        style={{
+          display: window.location.pathname.includes("/track-my-coffee")
+            ? "none"
+            : "block",
+        }}
       >
         <List>
           {linksArr.map((link, index) => (
             <NavLink
               key={index}
               to={link.route}
-              exact
               className={classes.navLinks}
               activeClassName={classes.activeNavLink}
               onClick={() => console.log("CLICKED")}
