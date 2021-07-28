@@ -48,25 +48,31 @@ class Dashboard extends Component {
   async componentDidMount() {
     setAuthToken();
     const { data } = await axios.get(
-      "http://localhost:8000/api/system/historian"
+      "http://192.168.246.128:8000/api/system/historian"
     );
     if (data.status === "success") {
       this.setState({
-        transactions: data.data.map((t) => {
-          return {
-            ...t,
-            transactionType:
-              t.transactionType.split(".")[
-                t.transactionType.split(".").length - 1
-              ],
-            participantInvoking: t.participantInvoking
-              ? t.participantInvoking.split("#")[1].toUpperCase()
-              : "-",
-            transactionTimestamp: `${t.transactionTimestamp.split("T")[0]}\n${
-              t.transactionTimestamp.split("T")[1].split(".")[0]
-            }`,
-          };
-        }),
+        transactions: data.data
+          .sort(
+            (a, b) =>
+              new Date(b.transactionTimestamp) -
+              new Date(a.transactionTimestamp)
+          )
+          .map((t) => {
+            return {
+              ...t,
+              transactionType:
+                t.transactionType.split(".")[
+                  t.transactionType.split(".").length - 1
+                ],
+              participantInvoking: t.participantInvoking
+                ? t.participantInvoking.split("#")[1].toUpperCase()
+                : "-",
+              transactionTimestamp: `${t.transactionTimestamp.split("T")[0]}\n${
+                t.transactionTimestamp.split("T")[1].split(".")[0]
+              }`,
+            };
+          }),
       });
     }
   }

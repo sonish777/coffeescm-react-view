@@ -57,7 +57,7 @@ class ContractDetail extends Component {
     try {
       setAuthToken();
       const result = await axios.get(
-        `http://localhost:8000/api/contracts/${contractId}`
+        `http://192.168.246.128:8000/api/contracts/${contractId}`
       );
       if (result.data.status === "success") {
         this.setState({
@@ -107,7 +107,7 @@ class ContractDetail extends Component {
       setAuthToken();
       const result = await axios({
         method: "PATCH",
-        url: `http://localhost:8000/api/contracts/${this.state.currentContract.contractId}`,
+        url: `http://192.168.246.128:8000/api/contracts/${this.state.currentContract.contractId}`,
         data: {
           [participants[index]]: this.state[participants[index]],
         },
@@ -131,7 +131,7 @@ class ContractDetail extends Component {
     try {
       setAuthToken();
       const result = await axios.get(
-        `http://localhost:8000/api/scmusers/${name}`
+        `http://192.168.246.128:8000/api/scmusers/${name}`
       );
       if (result.data.status === "success") {
         this.setState({

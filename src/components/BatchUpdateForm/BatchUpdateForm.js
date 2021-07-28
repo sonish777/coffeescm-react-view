@@ -261,7 +261,7 @@ class BatchUpdateForm extends Component {
         setAuthToken();
         const result = await axios({
           method: "PATCH",
-          url: `http://localhost:8000/api/batches/${batchId}/${updateType}`,
+          url: `http://192.168.246.128:8000/api/batches/${batchId}/${updateType}`,
           data,
         });
         if (result.data.status === "success") {

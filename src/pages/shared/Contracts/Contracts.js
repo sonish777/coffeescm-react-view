@@ -1,11 +1,11 @@
-import { Button, Chip, withStyles } from "@material-ui/core";
+import { Button, Chip, Typography, withStyles } from "@material-ui/core";
 import axios from "axios";
 import React, { Component } from "react";
 import MainHeader from "../../../components/MainHeader/MainHeader";
 import TableView from "../../../components/TableView/TableView";
 import WhiteCard from "../../../components/WhiteCard/WhiteCard";
 import { SnackbarContext } from "../../../contexts/SnackbarContext";
-import { setAuthToken } from "../../../helpers";
+import { beautifyDateTime, setAuthToken } from "../../../helpers";
 import ComponentWithLoading from "../../../hoc/ComponentWithLoading";
 import styles from "./ContractsStyle";
 import ModalView from "../../../components/ModalView/ModalView";
@@ -23,6 +23,7 @@ class Contracts extends Component {
   static contextType = SnackbarContext;
   state = {
     contracts: [],
+    isLoading: true,
     isSubmitting: false,
     showCreateContractForm: false,
     grower: "",
@@ -40,7 +41,7 @@ class Contracts extends Component {
     try {
       setAuthToken();
       const result = await axios.get(
-        "http://localhost:8000/api/scmusers/grower"
+        "http://192.168.246.128:8000/api/scmusers/grower"
       );
       if (result.data.status === "success") {
         this.setState({
@@ -56,16 +57,22 @@ class Contracts extends Component {
   loadContracts = async () => {
     try {
       setAuthToken();
-      const result = await axios.get("http://localhost:8000/api/contracts/");
+      const result = await axios.get(
+        "http://192.168.246.128:8000/api/contracts/"
+      );
       if (result.data.status === "success") {
         this.setState({
-          contracts: result.data.data,
+          contracts: result.data.data.sort(
+            (a, b) => new Date(b.createdDateTime) - new Date(a.createdDateTime)
+          ),
           isSubmitting: false,
+          isLoading: false,
           grower: "",
           showCreateContractForm: false,
         });
       }
     } catch (error) {
+      this.setState({ isLoading: false });
       console.log(error.response.data);
       error.response.data?.error.map((e) => this.context.viewSnackbar(e));
     }
@@ -81,7 +88,7 @@ class Contracts extends Component {
       setAuthToken();
       const result = await axios({
         method: "POST",
-        url: "http://localhost:8000/api/contracts",
+        url: "http://192.168.246.128:8000/api/contracts",
         data: window.location.pathname.includes("/admin")
           ? {
               grower: this.state.grower,
@@ -182,23 +189,29 @@ class Contracts extends Component {
           </Button>
         </header>
         <WhiteCard>
-          <ComponentWithLoading isLoading={contracts.length === 0}>
-            <TableView
-              tableHeaders={contractTableHeaders}
-              tableData={contracts.map((row) => {
-                return {
-                  contractId: row.contractId,
-                  batchId: row.batch.batchId,
-                  createdAt: row.createdDateTime,
-                  active: row.active ? (
-                    <Chip color="primary" label="Active" size="small" />
-                  ) : (
-                    <Chip color="secondary" label="Completed" size="small" />
-                  ),
-                };
-              })}
-              links={true}
-            />
+          <ComponentWithLoading isLoading={this.state.isLoading}>
+            {contracts.length === 0 ? (
+              <Typography>
+                Oops! You are not involved in any contracts yet.
+              </Typography>
+            ) : (
+              <TableView
+                tableHeaders={contractTableHeaders}
+                tableData={contracts.map((row) => {
+                  return {
+                    contractId: row.contractId,
+                    batchId: row.batch.batchId,
+                    createdAt: beautifyDateTime(row.createdDateTime),
+                    active: row.active ? (
+                      <Chip color="primary" label="Active" size="small" />
+                    ) : (
+                      <Chip color="secondary" label="Completed" size="small" />
+                    ),
+                  };
+                })}
+                links={true}
+              />
+            )}
           </ComponentWithLoading>
         </WhiteCard>
       </div>

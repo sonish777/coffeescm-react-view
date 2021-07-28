@@ -100,8 +100,8 @@ class Login extends Component {
         const result = await axios({
           method: "POST",
           url: isAdmin
-            ? "http://localhost:8000/api/system/login"
-            : "http://localhost:8000/api/scmusers/login",
+            ? "http://192.168.246.128:8000/api/system/login"
+            : "http://192.168.246.128:8000/api/scmusers/login",
           data: {
             [isAdmin ? "username" : "email"]: this.state.formData.email.value,
             password: this.state.formData.password.value,

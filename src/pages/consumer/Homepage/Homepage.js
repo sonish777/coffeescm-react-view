@@ -29,7 +29,9 @@ const Homepage = ({ classes, ...props }) => {
     const tempList = [];
     if (value.length > 4) {
       batches.forEach((el) => {
-        if (el.batch.shortBatchId?.toLowerCase().includes(value)) {
+        if (
+          el.batch.shortBatchId?.toLowerCase().includes(value.toLowerCase())
+        ) {
           tempList.push(el.batch);
         }
       });
@@ -42,7 +44,7 @@ const Homepage = ({ classes, ...props }) => {
       try {
         const result = await axios({
           method: "GET",
-          url: "http://localhost:8000/api/consumer/batches",
+          url: "http://192.168.246.128:8000/api/consumer/batches",
         });
         if (result.data.status === "success") {
           setBatches(result.data.data);

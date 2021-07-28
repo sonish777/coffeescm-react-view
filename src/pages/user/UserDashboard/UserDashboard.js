@@ -23,11 +23,15 @@ export default class UserDashboard extends Component {
   };
 
   async componentDidMount() {
+    this.loadDonations();
+  }
+
+  loadDonations = async () => {
     try {
       setAuthToken();
       const result = await axios({
         method: "GET",
-        url: `http://localhost:8000/api/scmusers/donations`,
+        url: `http://192.168.246.128:8000/api/scmusers/donations`,
       });
       if (result.data.status === "success") {
         console.log(result.data);
@@ -38,7 +42,7 @@ export default class UserDashboard extends Component {
     } catch (error) {
       console.log(error.response.data);
     }
-  }
+  };
 
   render() {
     const { donations } = this.state;

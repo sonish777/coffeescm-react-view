@@ -23,8 +23,8 @@ const App = (props) => {
         const result = await axios({
           method: "GET",
           url: isAdmin
-            ? "http://localhost:8000/api/system/me"
-            : "http://localhost:8000/api/scmusers/me",
+            ? "http://192.168.246.128:8000/api/system/me"
+            : "http://192.168.246.128:8000/api/scmusers/me",
         });
         if (result.data.status === "success") {
           userContext.login(result.data.data);

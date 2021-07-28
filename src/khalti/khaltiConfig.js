@@ -22,7 +22,7 @@ const getKhaltiCheckout = (
         console.log(payload);
         try {
           const response = await axios.post(
-            "http://localhost:8000/api/consumer/donate",
+            "http://192.168.246.128:8000/api/consumer/donate",
             {
               ...payload,
               donationMessage,

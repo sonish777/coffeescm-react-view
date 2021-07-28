@@ -27,7 +27,7 @@ class SearchResultBox extends Component {
               <ListItemAvatar>
                 <Avatar
                   alt={el.name}
-                  src={`http://localhost:8000/images/${el.avatarPath}`}
+                  src={`http://192.168.246.128:8000/images/${el.avatarPath}`}
                 />
               </ListItemAvatar>
               <ListItemText>

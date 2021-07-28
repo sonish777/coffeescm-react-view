@@ -32,6 +32,7 @@ import {
   IconButton,
   Paper,
   TextField,
+  Tooltip,
   Typography,
   withStyles,
 } from "@material-ui/core";
@@ -42,7 +43,7 @@ import BatchUpdateForm from "../../../components/BatchUpdateForm/BatchUpdateForm
 import axios from "axios";
 import ComponentWithLoading from "../../../hoc/ComponentWithLoading";
 import { UserContext } from "../../../contexts/UserContext";
-import { setAuthToken } from "../../../helpers";
+import { beautifyDateTime, setAuthToken } from "../../../helpers";
 import getKhaltiCheckout from "../../../khalti/khaltiConfig";
 import { SnackbarContext } from "../../../contexts/SnackbarContext";
 import Input from "../../../components/Input/Input";
@@ -264,8 +265,8 @@ class UserBatchDetail extends Component {
   loadCurrentBatch = async () => {
     const { batchId } = this.props.match.params;
     const url = window.location.pathname.includes("/track-my-coffee")
-      ? `http://localhost:8000/api/consumer/batches/${batchId}`
-      : `http://localhost:8000/api/batches/${batchId}`;
+      ? `http://192.168.246.128:8000/api/consumer/batches/${batchId}`
+      : `http://192.168.246.128:8000/api/batches/${batchId}`;
     console.log(url);
     try {
       setAuthToken();

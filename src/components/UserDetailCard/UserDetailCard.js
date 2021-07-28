@@ -17,7 +17,7 @@ const UserDetailCard = (props) => {
         <Container className={classes.cardBody}>
           <Avatar
             alt={user.name}
-            src={`http://localhost:8000/images/${user.avatarPath}`}
+            src={`http://192.168.246.128:8000/images/${user.avatarPath}`}
             className={classes.largeAvatar}
           />
         </Container>

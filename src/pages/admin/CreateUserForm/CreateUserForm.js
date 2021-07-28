@@ -122,7 +122,7 @@ class CreateUserForm extends Component {
       try {
         const result = await axios({
           method: "POST",
-          url: "http://localhost:8000/api/scmusers/",
+          url: "http://192.168.246.128:8000/api/scmusers/",
           data,
         });
         if (result.data.status === "success") {
