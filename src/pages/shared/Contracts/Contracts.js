@@ -1,16 +1,16 @@
 import { Button, Chip, withStyles } from "@material-ui/core";
 import axios from "axios";
 import React, { Component } from "react";
-import MainHeader from "../../components/MainHeader/MainHeader";
-import TableView from "../../components/TableView/TableView";
-import WhiteCard from "../../components/WhiteCard/WhiteCard";
-import { SnackbarContext } from "../../contexts/SnackbarContext";
-import { setAuthToken } from "../../helpers";
-import ComponentWithLoading from "../../hoc/ComponentWithLoading";
+import MainHeader from "../../../components/MainHeader/MainHeader";
+import TableView from "../../../components/TableView/TableView";
+import WhiteCard from "../../../components/WhiteCard/WhiteCard";
+import { SnackbarContext } from "../../../contexts/SnackbarContext";
+import { setAuthToken } from "../../../helpers";
+import ComponentWithLoading from "../../../hoc/ComponentWithLoading";
 import styles from "./ContractsStyle";
-import ModalView from "../../components/ModalView/ModalView";
-import Input from "../../components/Input/Input";
-import SearchResultBox from "../../components/SearchResultBox/SearchResultBox";
+import ModalView from "../../../components/ModalView/ModalView";
+import Input from "../../../components/Input/Input";
+import SearchResultBox from "../../../components/SearchResultBox/SearchResultBox";
 
 const contractTableHeaders = [
   "Contract Id",

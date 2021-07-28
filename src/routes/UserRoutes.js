@@ -1,13 +1,13 @@
 import React from "react";
 import { Redirect, Switch } from "react-router-dom";
-import Login from "../pages/Login/Login";
-import UserBatchDetail from "../pages/user/UserBatchDetail/UserBatchDetail";
-import UserBatches from "../pages/user/UserBatches/UserBatches";
+import Login from "../pages/shared/Login/Login";
+import UserBatchDetail from "../pages/shared/UserBatchDetail/UserBatchDetail";
+import UserBatches from "../pages/shared/UserBatches/UserBatches";
 import UserDashboard from "../pages/user/UserDashboard/UserDashboard";
 import PublicRoute from "./PublicRoutes";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "../pages/user/Register/Register";
-import Contracts from "../pages/Contracts/Contracts";
+import Contracts from "../pages/shared/Contracts/Contracts";
 import ContractDetail from "../pages/shared/ContractDetail/ContractDetail";
 
 const UserRoutes = () => {

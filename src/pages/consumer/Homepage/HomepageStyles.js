@@ -1,17 +1,19 @@
 const styles = {
   searchBox: {
     margin: "10px 0",
-    width: "80%",
+    width: "50%",
     marginRight: "15px",
   },
   formRoot: {
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    position: "relative",
   },
-  button: {
-    width: "100px",
-    height: "50px",
+  paperRoot: {
+    position: "absolute",
+    top: "70px",
+  },
+  processedDateTime: {
+    fontStyle: "italic",
+    paddingLeft: "8px",
   },
 };
 

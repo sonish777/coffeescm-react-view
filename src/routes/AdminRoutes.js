@@ -2,16 +2,16 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { Component } from "react";
 
-import Login from "../pages/Login/Login";
+import Login from "../pages/shared/Login/Login";
 import ContractDetail from "../pages/shared/ContractDetail/ContractDetail";
-import Contracts from "../pages/Contracts/Contracts";
+import Contracts from "../pages/shared/Contracts/Contracts";
 import CreateUserForm from "../pages/admin/CreateUserForm/CreateUserForm";
 import Dashboard from "../pages/admin/Dashboard/Dashboard";
 import Users from "../pages/admin/Users/Users";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoutes";
 import UserBatches from "../pages/shared/UserBatches/UserBatches";
-import UserBatchDetail from "../pages/user/UserBatchDetail/UserBatchDetail";
+import UserBatchDetail from "../pages/shared/UserBatchDetail/UserBatchDetail";
 
 class AdminRoutes extends Component {
   render() {

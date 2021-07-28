@@ -7,6 +7,9 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
+import copy from "copy-to-clipboard";
+import shortuuid from "short-uuid";
 
 import styles from "./UserBatchStyles";
 import Growing from "../../../assets/sprout.png";
@@ -22,7 +25,16 @@ import {
   NavigateNext as NavigateNextIcon,
   Check as CheckIcon,
 } from "@material-ui/icons";
-import { Breadcrumbs, Paper, Typography, withStyles } from "@material-ui/core";
+import {
+  Breadcrumbs,
+  Button,
+  Container,
+  IconButton,
+  Paper,
+  TextField,
+  Typography,
+  withStyles,
+} from "@material-ui/core";
 import { Link } from "react-router-dom";
 import TimelineOppositeContentAvatar from "../../../components/TimelineOppositeContentAvatar/TimelineOppositeContentAvatar";
 import TimelineData from "../../../components/TimelineData/TimelineData";
@@ -31,6 +43,12 @@ import axios from "axios";
 import ComponentWithLoading from "../../../hoc/ComponentWithLoading";
 import { UserContext } from "../../../contexts/UserContext";
 import { setAuthToken } from "../../../helpers";
+import getKhaltiCheckout from "../../../khalti/khaltiConfig";
+import { SnackbarContext } from "../../../contexts/SnackbarContext";
+import Input from "../../../components/Input/Input";
+import withFormValidation from "../../../hoc/withFormValidation/withFormValidation";
+
+const translator = shortuuid();
 
 const displayGrowingData = (batch, classes) => (
   <TimelineItem key="GROWING">
@@ -204,6 +222,35 @@ class UserBatchDetail extends Component {
 
   state = {
     currentBatch: null,
+    submit: false,
+    isSubmitting: false,
+    formData: {
+      amount: {
+        value: "",
+        error: false,
+        errorText: "",
+        touched: false,
+        validation: [{ type: "REQUIRED" }, { type: "MINVAL", value: 10 }],
+        config: {
+          elementType: "number",
+          name: "amount",
+          placeholder: "Donation Amount (RS)",
+          min: 10,
+        },
+      },
+      donationMessage: {
+        value: "",
+        error: false,
+        errorText: "",
+        touched: false,
+        validation: [{ type: "REQUIRED" }],
+        config: {
+          elementType: "input",
+          name: "donationMessage",
+          placeholder: "Donation Message",
+        },
+      },
+    },
   };
 
   async componentDidMount() {
@@ -216,11 +263,13 @@ class UserBatchDetail extends Component {
 
   loadCurrentBatch = async () => {
     const { batchId } = this.props.match.params;
+    const url = window.location.pathname.includes("/track-my-coffee")
+      ? `http://localhost:8000/api/consumer/batches/${batchId}`
+      : `http://localhost:8000/api/batches/${batchId}`;
+    console.log(url);
     try {
       setAuthToken();
-      const result = await axios.get(
-        `http://localhost:8000/api/batches/${batchId}`
-      );
+      const result = await axios.get(url);
       if (result.data.status === "success") {
         console.log(result.data);
         this.setState({
@@ -314,14 +363,86 @@ class UserBatchDetail extends Component {
     return currentBatch && batchTimeline;
   };
 
+  onCopyHandler = (e) => {
+    const batchUuid = this.state.currentBatch?.batchId;
+    const shortBatchUuid = translator.fromUUID(batchUuid.split("BAT_")[1]);
+    copy(shortBatchUuid);
+  };
+
+  onCloseKhaltiModal = () => {
+    this.setState({
+      isSubmitting: false,
+    });
+  };
+
+  onDonateResponseHandler = (response, snackbarContext) => {
+    if (response === true) {
+      snackbarContext.viewSnackbar("Thank you for your donation!");
+      const formData = { ...this.state.formData };
+      formData.amount.value = 0;
+      formData.donationMessage.value = "";
+      this.setState({
+        isSubmitting: false,
+        formData,
+      });
+    } else {
+      snackbarContext.viewSnackbar(
+        "Something went wrong, please try again later"
+      );
+      this.setState({
+        isSubmitting: false,
+      });
+    }
+  };
+
+  onDonateClickHandler = (e, snackbarContext) => {
+    this.setState({ isSubmitting: true });
+    const checkout = getKhaltiCheckout(
+      this.state.currentBatch.contract.grower.userId,
+      this.state.currentBatch.contract.grower.name,
+      window.location.href,
+      snackbarContext,
+      this.onDonateResponseHandler,
+      this.state.formData.donationMessage.value,
+      this.onCloseKhaltiModal
+      // "SOME URL"
+    );
+    checkout.show({ amount: this.state.formData.amount.value * 100 });
+  };
+
+  onInputChangeHandler = (event) => {
+    const formData = { ...this.state.formData };
+    formData[event.target.name].value = event.target.value;
+    const [updatedFormData, error] = this.props.updateErrorData(
+      formData,
+      event.target.name
+    );
+    this.setState({
+      formData: updatedFormData,
+      submit: error,
+    });
+  };
+  onBlurHandler = (event) => {
+    const formData = { ...this.state.formData };
+    if (formData[event.target.name].touched === true) return;
+    const updatedFormData = this.props.updateTouchData(
+      formData,
+      event.target.name
+    );
+    this.setState({
+      formData: updatedFormData,
+    });
+  };
+
   render() {
-    const { currentBatch } = this.state;
+    const { currentBatch, formData } = this.state;
     const { classes } = this.props;
     const { batchId } = this.props.match.params;
     const batchTimeline = this.batchTimelineGenerator(
       classes,
       this.reloadCurrentBatch
     );
+
     return (
       <div>
         <Breadcrumbs
@@ -332,19 +453,74 @@ class UserBatchDetail extends Component {
             to={
               window.location.pathname.includes("/admin")
                 ? "/admin/batches"
-                : "/batches"
+                : window.location.pathname.includes("/batches")
+                ? "/batches"
+                : "/track-my-coffee"
             }
           >
-            Batches
+            {window.location.pathname.includes("/batches")
+              ? "Batches"
+              : "Go Back"}
           </Link>
-          <Typography color="textPrimary">{batchId}</Typography>
+          <Typography color="textPrimary">
+            {batchId}
+            <IconButton onClick={this.onCopyHandler}>
+              <FileCopyIcon />
+            </IconButton>
+          </Typography>
         </Breadcrumbs>
         <ComponentWithLoading isLoading={currentBatch === null}>
           <Timeline align="alternate">{batchTimeline}</Timeline>
+          {window.location.pathname.includes("/track-my-coffee") && (
+            <SnackbarContext.Consumer>
+              {(snackbarContext) => (
+                <Paper
+                  style={{
+                    textAlign: "center",
+                    padding: "20px",
+                    width: "50%",
+                    margin: "auto",
+                  }}
+                >
+                  <form>
+                    <Typography variant="h5">THANK YOUR FARMER</Typography>
+                    <ComponentWithLoading isLoading={this.state.isSubmitting}>
+                      <Input
+                        {...formData.donationMessage.config}
+                        value={formData.donationMessage.value}
+                        onInputChangeHandler={this.onInputChangeHandler}
+                        error={formData.donationMessage.error}
+                        helperText={formData.donationMessage.errorText}
+                        onBlurHandler={this.onBlurHandler}
+                      />
+                      <Input
+                        {...formData.amount.config}
+                        value={formData.amount.value}
+                        onInputChangeHandler={this.onInputChangeHandler}
+                        error={formData.amount.error}
+                        helperText={formData.amount.errorText}
+                        onBlurHandler={this.onBlurHandler}
+                      />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={(e) =>
+                          this.onDonateClickHandler(e, snackbarContext)
+                        }
+                        disabled={formData && !this.state.submit}
+                      >
+                        Donate
+                      </Button>
+                    </ComponentWithLoading>
+                  </form>
+                </Paper>
+              )}
+            </SnackbarContext.Consumer>
+          )}
         </ComponentWithLoading>
       </div>
     );
   }
 }
 
-export default withStyles(styles)(UserBatchDetail);
+export default withFormValidation(withStyles(styles)(UserBatchDetail));

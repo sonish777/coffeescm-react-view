@@ -3,12 +3,12 @@ import { Button, Paper, withStyles } from "@material-ui/core";
 import axios from "axios";
 
 import styles from "./LoginStyle";
-import Input from "../../components/Input/Input";
-import withFormValidation from "../../hoc/withFormValidation/withFormValidation";
+import Input from "../../../components/Input/Input";
+import withFormValidation from "../../../hoc/withFormValidation/withFormValidation";
 import { withRouter } from "react-router-dom";
-import { UserContext } from "../../contexts/UserContext";
-import { SnackbarContext } from "../../contexts/SnackbarContext";
-import ComponentWithLoading from "../../hoc/ComponentWithLoading";
+import { UserContext } from "../../../contexts/UserContext";
+import { SnackbarContext } from "../../../contexts/SnackbarContext";
+import ComponentWithLoading from "../../../hoc/ComponentWithLoading";
 
 const roles = [
   {

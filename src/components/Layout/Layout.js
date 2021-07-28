@@ -30,8 +30,8 @@ const Layout = (props) => {
   const loggedOutNavLinks = {
     "/admin": [{ text: "Login", route: "/admin" }],
     "/scmusers": [
-      { text: "Login", route: "/" },
-      { text: "Register", route: "/register" },
+      { text: "Login", route: "/", exact: true },
+      { text: "Register", route: "/register", exact: true },
     ],
   };
   const userContext = useContext(UserContext);
@@ -67,6 +67,7 @@ const Layout = (props) => {
               className={classes.navLinks}
               activeClassName={classes.activeNavLink}
               onClick={() => console.log("CLICKED")}
+              exact={link.exact ? true : false}
             >
               <ListItem button>
                 <ListItemText primary={link.text} style={{ paddingLeft: 20 }} />
