@@ -126,13 +126,41 @@ class Register extends Component {
           data,
         });
         if (result.data.status === "success") {
-          this.setState({
-            isSubmitting: false,
-            formData: formDataStructure,
-            submit: false,
-          });
-          this.context.viewSnackbar("Registered Successfully");
-          this.props.history.push("/");
+          this.context.viewSnackbar("Identity issue in process, please wait");
+          window.setTimeout(() => {
+            const formData = { ...this.state.formData };
+            formData.name.value = "";
+            formData.email.value = "";
+            formData.password.value = "";
+            formData.avatarPath.value = "";
+            formData.contact.value = "";
+            formData.role.value = roles[0].value;
+            formData.name.error = false;
+            formData.name.errorText = "";
+            formData.name.touched = false;
+            formData.email.error = false;
+            formData.email.errorText = "";
+            formData.email.touched = false;
+            formData.password.error = false;
+            formData.password.errorText = "";
+            formData.password.touched = false;
+            formData.contact.error = false;
+            formData.contact.errorText = "";
+            formData.contact.touched = false;
+            formData.avatarPath.error = false;
+            formData.avatarPath.errorText = "";
+            formData.avatarPath.touched = true;
+            formData.role.error = false;
+            formData.role.errorText = "";
+            formData.role.touched = true;
+            this.setState({
+              isSubmitting: false,
+              formData: formData,
+              submit: false,
+            });
+            this.context.viewSnackbar("Registered Successfully");
+            this.props.history.push("/");
+          }, 8500);
         }
       } catch (error) {
         this.setState({ isSubmitting: false });
